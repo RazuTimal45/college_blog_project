@@ -240,7 +240,7 @@
     </div> 
         <footer class="bg-body-tertiary text-center fs-20 mx-0">
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-        MediaMan © 2024 created by
+        Razublogg  © 2024 created by
             <a class="text-body" href="http://rajutimalsina.com.np/">Razu Blogg</a>
         </div>
         </footer>

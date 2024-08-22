@@ -76,7 +76,7 @@ class PostController extends BackendBaseController
 
      protected function generateTagsFromDescription($description)
      {
-         // Tokenize the description into words
+         
          $words = str_word_count(strtolower(strip_tags($description)), 1);
  
 
@@ -108,7 +108,7 @@ class PostController extends BackendBaseController
              $request->request->add(['content' => $request->input("description")]);
              $post = $this->model->create($request->all());
  
-             // Generate tags from the description
+             
              $tags = $this->generateTagsFromDescription($request->input("description"));
  
              foreach ($tags as $tagName) {

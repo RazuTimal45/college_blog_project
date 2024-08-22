@@ -46,7 +46,7 @@ class FrontendController extends Controller
         $data['blogs'] = Post::all();  
         $data['categories'] = Category::all();
 
-        // Assuming you want to recommend posts based on the first blog post
+        
         if ($data['blogs']->isNotEmpty()) {
             $firstPostId = $data['blogs']->first()->id;
             $data['recommended_posts'] = $this->recommendationService->calculateRecommendations($firstPostId);
@@ -58,23 +58,28 @@ class FrontendController extends Controller
     }
     }
     public function aboutUs(){
-      
+             
+    }
+    public function home(){
+        $data['blogs'] = Post::all();  
+        $data['categories'] = Category::all();
+        return view('frontend.index', compact('data'));
     }
     public function blogDetail($slug)
 {
-    // Fetch the blog post by slug or fail if not found
+    
     $blog = Post::where('slug', $slug)->with('categories')->firstOrFail();
 
-    // Increment the number of readers for the blog post
+    
     $blog->increment('no_of_readers');
 
-    // Prepare data array to pass to the view
+    
     $data = [];
 
-    // Store the blog details in the data array
+    
     $data['blog_detail'] = $blog;
 
-    // Check if there are other blog posts to recommend
+    
     $data['recommended_posts'] = $blog->exists 
         ? $this->recommendationService->calculateRecommendations($blog->id) 
         : collect();
@@ -122,7 +127,7 @@ public function storeComment(CommentRequest $request, $slug)
         return view('frontend.login');
     }
     public function userRegister(UserRequest $request){
-        dd(true);
+        // dd(true);
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),

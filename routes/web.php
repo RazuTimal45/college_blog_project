@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
     Route::get('/',[FrontendController::class,'index'])->name('frontend.default');
-
+    Route::get('/home',[FrontendController::class,'home'])->name('frontend.index');
 
     // Route::get('/about',[FrontendController::class,'aboutUs'])->name('frontend.about');
     // Route::get('/offerings',[FrontendController::class,'services'])->name('frontend.services');

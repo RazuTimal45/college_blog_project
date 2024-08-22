@@ -30,14 +30,19 @@
                         @endforeach
                     @endif</td>
                     </tr>
-                    <tr>
-                    <th>Categories</th>
-                    <td>@if (($data['record']->categories)->isNotEmpty())
-                        @foreach ($data['record']->categories as $category)
-                        {{ $category->name }}
-                        @endforeach
-                    @endif</td>
-                    </tr>
+                 <tr>
+    <th>Categories</th>
+    <td>
+        @if ($data['record']->categories->isNotEmpty())
+            @foreach ($data['record']->categories as $category)
+                {{ $category->name }}@if (!$loop->last), @endif
+            @endforeach
+        @else
+            No categories available
+        @endif
+    </td>
+</tr>
+
                     <tr>
                         <th>Image</th>
                         @if($data['record']->image)
@@ -45,6 +50,10 @@
                         @else
                             @include('backend.includes.noimage')
                         @endif
+                    </tr>
+                    <tr>
+                    <th>Description</th>
+                    <td>{!! $data['record']->description !!}</td>
                     </tr>
                       <tr>
                         <th>Status</th>
