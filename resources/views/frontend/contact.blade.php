@@ -20,12 +20,12 @@
                     <ul class="contact-info">
                         <li><span>Address:</span>3770 Hidden meadow <br> drive venturia, ND 58489</li>
                         <li><span>Phone:</span><a href="tel:7045550127">(704) 555-0127</a></li>
-                        <li><span>Mail Us:</span><a href="#">vixto@example.com</a></li>
+                        <li><span>Mail Us:</span><a href="#">razublogg@info.com</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form action="https://html.dynamiclayers.net/dl/vixto/php/contact.php" method="post" id="ajax_contact" class="form-horizontal">
+                        <form action="" method="post" id="ajax_contact" class="form-horizontal">
                             <div class="contact-form-group">
                                 <div class="form-field">
                                     <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name" required="">

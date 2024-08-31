@@ -41,22 +41,15 @@ class FrontendController extends Controller
     {
         $this->recommendationService = $recommendationService;
     }
-    public function index(Request $request){
-         {
+    public function index(Request $request)
+    {
         $data['blogs'] = Post::all();  
         $data['categories'] = Category::all();
-
-        
-        if ($data['blogs']->isNotEmpty()) {
-            $firstPostId = $data['blogs']->first()->id;
-            $data['recommended_posts'] = $this->recommendationService->calculateRecommendations($firstPostId);
-        } else {
-            $data['recommended_posts'] = collect();
-        }
-
-        return view('frontend.default', compact('data'));
+    
+    
+        return view('frontend.index', compact('data'));
     }
-    }
+    
     public function aboutUs(){
              
     }
@@ -66,68 +59,56 @@ class FrontendController extends Controller
         return view('frontend.index', compact('data'));
     }
     public function blogDetail($slug)
-{
+    {
+        $blog = Post::where('slug', $slug)->with('categories')->firstOrFail();
+        $blog->increment('no_of_readers');
     
-    $blog = Post::where('slug', $slug)->with('categories')->firstOrFail();
-
+        $data['blog_detail'] = $blog;
+        
+        $categoryIds = $blog->categories->pluck('id');
     
-    $blog->increment('no_of_readers');
-
+        // Fetch related blogs based on the shared categories, excluding the current post
+        $data['relatedBlogs'] = Post::whereHas('categories', function ($query) use ($categoryIds) {
+            $query->whereIn('category_id', $categoryIds);
+        })
+        ->where('id', '!=', $blog->id)
+        ->limit(4)
+        ->get();
     
-    $data = [];
-
+          // Fetch the last five comments related to the post
+            $data['comments'] = Comment::where('post_id', $blog->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        // Return the blog detail view with the data array
+        return view('frontend.blog_detail', compact('data'));
+    }
     
-    $data['blog_detail'] = $blog;
-
+    public function storeComment(CommentRequest $request, $slug)
+    {
+        // Fetch the blog post based on the slug
+        $blog = Post::where('slug', $slug)->firstOrFail();
     
-    $data['recommended_posts'] = $blog->exists 
-        ? $this->recommendationService->calculateRecommendations($blog->id) 
-        : collect();
-
-    // Get category IDs associated with the blog post
-    $categoryIds = $blog->categories->pluck('id');
-
-    // Fetch related blogs based on the shared categories, excluding the current post
-    $data['relatedBlogs'] = Post::whereHas('categories', function ($query) use ($categoryIds) {
-                                        $query->whereIn('category_id', $categoryIds);
-                                    })
-                                    ->where('id', '!=', $blog->id)
-                                    ->limit(4)
-                                    ->get();
-
-    // Return the blog detail view with the data array
-    return view('frontend.blog_detail', compact('data'));
-}
-public function storeComment(CommentRequest $request, $slug)
-{
-    // dd($request->all());
-    $blog = Post::where('slug', $slug)->firstOrFail();
-    $user_id = $request->input('user_id');
-    // if (Auth::check()) {
-        // Create a new comment
+        // Create and save the comment
         $comment = new Comment([
-            'user_id' => $user_id,
-            'post_id' => $blog->id,
-            'content' => $request->input('content'),
+            'user_id' => $request->input('user_id'), // From hidden input
+            'post_id' => $blog->id,                 // From the blog post found by slug
+            'content' => $request->input('content'), // From the textarea input
         ]);
-
+    
         // Save the comment to the database
         $comment->save();
-
+    
         // Redirect back to the blog post with a success message
         return redirect()->route('frontend.blog_detail', ['slug' => $blog->slug])
                          ->with('success', 'Your comment has been added successfully.');
-    // } else {
-    //     // Redirect to login if the user is not authenticated
-    //     return redirect()->route('login')->with('error', 'You must be logged in to comment.');
-    // }
-}
+    }
+    
 
     public function userLogin(){
         return view('frontend.login');
     }
     public function userRegister(UserRequest $request){
-        // dd(true);
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -139,5 +120,18 @@ public function storeComment(CommentRequest $request, $slug)
     public function contact(){
         return view('frontend.contact');
     }
+    public function popularBlogs()
+    {
+        $data['blogs'] = Post::with('categories')->orderBy('no_of_readers', 'desc')->limit(12)->get();
+        return view('frontend.popular_blogs', compact('data'));
+    }
+    
+    public function recommendedBlogs()
+    {
+        $data['recommended'] = $this->recommendationService->calculateRecommendations();
 
+        return view('frontend.recommended', compact('data'));
+    }
+    
+    
 }

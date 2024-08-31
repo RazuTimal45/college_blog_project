@@ -76,20 +76,23 @@ class PostController extends BackendBaseController
 
      protected function generateTagsFromDescription($description)
      {
-         
          $words = str_word_count(strtolower(strip_tags($description)), 1);
- 
-
          $wordCounts = array_count_values($words);
- 
-
          arsort($wordCounts);
- 
-         $stopWords = ['the', 'and', 'a', 'to', 'of', 'in', 'with', 'on', 'for', 'is', 'that','you', 'more','your','she','he'];
+     
+         // Include the file that returns an array
+         $stopWords = [
+            "and", "but", "or", "nor", "for", "yet", "so", "although", "because", "since", "unless", "while", "if", "before", "after", "when", "until",
+            "a", "an", "the",
+            "in", "on", "at", "by", "with", "about", "against", "between", "under", "over", "above", "below", "during", "through", "to", "from", "up", "down", "into", "out", "of",
+            "I", "me", "you", "he", "him", "she", "her", "it", "we", "us", "they", "them", "my", "your", "his", "her", "its", "our", "their", "mine", "yours", "hers", "ours", "theirs","is","am", "is", "are", "was", "were", "being", "been","have", "has", "had", "having","Can","Could","May","Might",
+            "Must","Shall","Should","Will","Would","this"
+        ]; 
+     
          $tags = array_diff(array_keys($wordCounts), $stopWords);
- 
          return array_slice($tags, 0, 5);
      }
+     
      public function store(PostRequest $request)
      {
          DB::beginTransaction();

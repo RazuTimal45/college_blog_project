@@ -37,7 +37,7 @@
                     <div class="footer-widget widget">
                         <div class="about-widget">
                             <a href="index-2.html" class="logo"><span class="site-title">RazuBlogg</span></a>
-                            <p>Author of this blog md elizabeth nichols is a travel enthusiast, writer and street photographer.</p>
+                            <p>Fouder of this blog mr Razu Timalsina is a Web Developer, Cyber Security Enthusiast, Blogger and Investor.</p>
                             <a href="subscribe.html" class="default-btn text-anim" data-text="Subscribe">Subscribe</a>
                         </div>
                     </div>
@@ -56,10 +56,11 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-widget widget">
                         <div class="widget-post-items">
-                            <h3 class="widget-title">Recommended</h3>
+                            <h3 class="widget-title">Recent Blogs</h3>
                             <div class="widget-post-item img-hover-move">
                                 <div class="widget-post-thumb media">
                                     <a href="single.html"><img src="{{asset('assets/frontend/assets/img/post-1.jpg')}}" alt="thumb"></a>
@@ -81,9 +82,9 @@
                         <div class="contact-widget">
                             <h3 class="widget-title">Contact Info</h3>
                             <ul class="contact-info">
-                                <li><span>Address:</span>3770 Hidden meadow drive venturia, ND 58489</li>
-                                <li><span>Phone:</span><a href="tel:7045550127">(704) 555-0127</a></li>
-                                <li><span>Mail Us:</span><a href="#">vixto@example.com</a></li>
+                                <li><span>Address:</span>Imadol, Lalitpur</li>
+                                <li><span>Phone:</span><a href="tel:7045550127">+123 456 789</a></li>
+                                <li><span>Mail Us:</span><a href="#">razublogg@info.com</a></li>
                             </ul>
                         </div>
                     </div>

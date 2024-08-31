@@ -17,16 +17,16 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form action="" method="post" id="ajax_contact" class="form-horizontal">
+                        <form action="" method="" id="ajax_contact" class="form-horizontal">
                             <div class="contact-form-group d-block">
                                 <div class="form-field my-2">
-                                    <input type="email" id="email" name="email" class="form-control w-50" placeholder="Email" required="">
+                                    <input type="email" id="email" name="email" class="form-control w-50" placeholder="Email">
                                 </div>
                                  <div class="form-field my-2">
-                                    <input type="password" id="password" name="password" class="form-control w-50" placeholder="********" required="">
+                                    <input type="password" id="password" name="password" class="form-control w-50" placeholder="********">
                                 </div>
                                 <div class="form-field submit-btn">
-                                    <button id="submit" class="default-btn text-anim" type="submit" data-text="Login">Login</button>
+                                    <button id="submit" class="default-btn text-anim" type="submit" data-text="Login"><a href="/home">Login</a></button>
                                 </div>
                             </div>
                             <div id="form-messages" class="alert" role="alert"></div>

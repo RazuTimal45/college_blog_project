@@ -28,10 +28,10 @@
             </div>
         </div>
     </div>
-    <!--/.popup-search-box-->
+
     
     <div id="searchbox-overlay"></div>
-    <!--/.searchbox-overlay-->
+
     
     <section class="single-page no-sidebar padding-bottom">
         <div class="container">
@@ -51,58 +51,88 @@
                     <div class="single-post-content">
                        {!! $data['blog_detail']->description !!}
                     </div
-                    
                 </div>
-                    <div class="single-post-item">
-                        <h3>Related Articles</h3>
-                        <div class="related-post-wrap">
-                         @forelse($data['relatedBlogs'] as $relatedblogs)
-                            <article>
-                                <div class="post-card horizontal-card img-hover-move">
-                                    <div class="post-thumb media">
-                                        <a href="{{ route('frontend.blog_detail',$relatedblogs->slug) }}">
-                                            <img src="{{asset('images/posts/'.$relatedblogs->image)}}" alt="thumb">
-                                        </a>
-                                    </div>
-                                    <div class="post-content">
-                                        <ul class="post-meta">
-                                            <li><a href="category.html">{{ $relatedblogs->categories->pluck('name')->first()}}</a></li>
-                                            <li class="sep"></li>
-                                            <li><a href="{{ route('frontend.blog_detail',$relatedblogs->slug) }}" class="date">{{ $relatedblogs->created_at->format('d F, Y') }}</a></li>
-                                        </ul>
-                                        <h3><a href="single.html" class="text-hover">{{ $relatedblogs->title }}</a></h3>
-                                        <ul class="post-card-footer">
-                                            <li><a href="single.html" class="read-more">Continue Reading</a></li>
-                                            <li>
-                                                <a href="#" class="comment">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
-                                                        <path d="M250.001-410.001h459.998v-59.998H250.001v59.998Zm0-120h459.998v-59.998H250.001v59.998Zm0-120h459.998v-59.998H250.001v59.998Zm609.998 531.537L718.461-260.001H172.309q-30.308 0-51.308-21t-21-51.308v-455.382q0-30.308 21-51.308t51.308-21h615.382q30.308 0 51.308 21t21 51.308v669.227ZM172.309-320h571.69L800-264.615v-523.076q0-4.616-3.846-8.463-3.847-3.846-8.463-3.846H172.309q-4.616 0-8.463 3.846-3.846 3.847-3.846 8.463v455.382q0 4.616 3.846 8.463 3.847 3.846 8.463 3.846ZM160-320V-800v480Z" />
-                                                    </svg><span>04</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </article>
-                            @empty
-                            @endforelse
+          @if($data['relatedBlogs']->isNotEmpty())
+    <div class="single-post-item">
+        <h3>Related Articles</h3>
+        <div class="related-post-wrap">
+            @forelse($data['relatedBlogs'] as $relatedBlog)
+                <article>
+                    <div class="post-card horizontal-card img-hover-move">
+                        <div class="post-thumb media">
+                            <a href="{{ route('frontend.blog_detail', $relatedBlog->slug) }}">
+                                <img src="{{ asset('images/posts/' . $relatedBlog->image) }}" alt="{{ $relatedBlog->title }}">
+                            </a>
+                        </div>
+                        <div class="post-content">
+                            <ul class="post-meta">
+                                <li>
+                                    <a href="{{ route('category.show', $relatedBlog->categories->first()->slug) }}">
+                                        {{ $relatedBlog->categories->pluck('name')->first() }}
+                                    </a>
+                                </li>
+                                <li class="sep"></li>
+                                <li>
+                                    <a href="{{ route('frontend.blog_detail', $relatedBlog->slug) }}" class="date">
+                                        {{ $relatedBlog->created_at->format('d F, Y') }}
+                                    </a>
+                                </li>
+                            </ul>
+                            <h3>
+                                <a href="{{ route('frontend.blog_detail', $relatedBlog->slug) }}" class="text-hover">
+                                    {{ $relatedBlog->title }}
+                                </a>
+                            </h3>
+                            <ul class="post-card-footer">
+                                <li>
+                                    <a href="{{ route('frontend.blog_detail', $relatedBlog->slug) }}" class="read-more">Continue Reading</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="comment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                                            <path d="M250.001-410.001h459.998v-59.998H250.001v59.998Zm0-120h459.998v-59.998H250.001v59.998Zm0-120h459.998v-59.998H250.001v59.998Zm609.998 531.537L718.461-260.001H172.309q-30.308 0-51.308-21t-21-51.308v-455.382q0-30.308 21-51.308t51.308-21h615.382q30.308 0 51.308 21t21 51.308v669.227ZM172.309-320h571.69L800-264.615v-523.076q0-4.616-3.846-8.463-3.847-3.846-8.463-3.846H172.309q-4.616 0-8.463 3.846-3.846 3.847-3.846 8.463v455.382q0 4.616 3.846 8.463 3.847 3.846 8.463 3.846ZM160-320V-800v480Z" />
+                                        </svg>
+                                        <span>04</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    
-                    <div class="single-post-item">
-                        <ul class="single-post-navigation">
-                            <li><a href="single.html"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M366.924-213.463 100.001-480.385l266.923-266.922 41.768 41.768-194.54 195.155h646.231v59.999H214.537l195.155 195.154-42.768 41.768Z"/></svg>Prev Posts</a></li>
-                            <li><a href="single.html">Next Posts<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="m593.461-213.463-42.768-41.768 195.155-195.154H100.001v-59.999h646.231L551.693-705.539l41.768-41.768 266.922 266.922-266.922 266.922Z"/></svg></a></li>
-                        </ul>
-                    </div>
-                    <!--/.post-navigation-->
-                    
+                </article>
+            @empty
+                <p>No related articles found.</p>
+            @endforelse
+        </div>
+    </div>
+    
+    <div class="single-post-item">
+        <ul class="single-post-navigation">
+            <li>
+                <a href="{{ route('frontend.prev_post', $currentPost->slug) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                        <path d="M366.924-213.463 100.001-480.385l266.923-266.922 41.768 41.768-194.54 195.155h646.231v59.999H214.537l195.155 195.154-42.768 41.768Z"/>
+                    </svg>
+                    Prev Posts
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('frontend.next_post', $currentPost->slug) }}">
+                    Next Posts
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                        <path d="m593.461-213.463-42.768-41.768 195.155-195.154H100.001v-59.999h646.231L551.693-705.539l41.768-41.768 266.922 266.922-266.922 266.922Z"/>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+@endif
+
                     <div class="single-post-item">
                         <div class="single-post-author">
                             <div class="author-thumb"><a href="author.html"><img src="{{asset('assets/frontend/assets/img/author-widget.jpg')}}" alt="thumb"></a></div>
                             <div class="author-info">
-                                <h3><a href="author.html">Raju Timalsina</a> <span>Founder - Editor</span></h3>
-                                <p>Meet Raju, the passionate mind behind our blog. With a heart woven with words and a penchant for storytelling, Emily is a dedicated writer who crafts narratives. </p>
+                                <h3><a href="author.html">{{ $data['blog_detail']->user->name }}</a><span>Author</span></h3>
+                                <p>Meet {{ $data['blog_detail']->user->name }}, the passionate mind behind this blog. With a heart woven with words and a penchant for storytelling, Emily is a dedicated writer who crafts narratives. </p>
                                 <ul class="post-social-share">
                                 <li class="facebook"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"></path></svg></a>
                                 </li>
@@ -118,28 +148,29 @@
                     <!--/.post-author-->
                     
                     <div class="single-post-item">
-                       <h3>Post Comments</h3>
+                       <h3>Reviews</h3>
                         <ul class="comments-box">
+                        @forelse($data['comments'] as $comments)
                             <li class="comment">
                                 <div class="comment-inner">
                                     <div class="comment-thumb"><img src="{{asset('assets/frontend/assets/img/author-1.jpg')}}" alt="img"></div>
                                     <div class="comment-wrap">
                                         <div class="comments-meta">
-                                            <h4>Félix Lengyel <span>01.01.2024 at 8:00</span></h4>
+                                            <h4>{{ $comments->user->name }} <span>{{ $comments->created_at->format('d.f.Y') }} at 8:00</span></h4>
                                         </div>
                                         <div class="comment-area">
-                                            <p>You guys have put so much work, effort, and time while designing this awesome theme I can see that passion when I incorporated it into my website.</p>
+                                            <p>{{ $comments->content }}</p>
                                             <a href="#" class="reply">Reply</a>
                                         </div>
                                     </div>
                                 </div>
-                                <ul class="children">
+                                {{-- <ul class="children">
                                     <li class="comment">
                                         <div class="comment-inner">
                                             <div class="comment-thumb"><img src="{{asset('assets/frontend/assets/img/author-2.jpg')}}" alt="img"></div>
                                             <div class="comment-wrap">
                                                 <div class="comments-meta">
-                                                    <h4>Joseph Crawford <span>01.01.2024 at 8:00</span></h4>
+                                                    <h4>Raju <span>01.01.2024 at 8:00</span></h4>
                                                 </div>
                                                 <div class="comment-area">
                                                     <p>The only thing I LOVE more than this theme and it’s incredible options is the support team! They are freaking amazable!</p>
@@ -148,38 +179,31 @@
                                             </div>
                                         </div>
                                     </li>
-                                </ul>
+                                </ul> --}}
                             </li>
-                            <li class="comment">
-                                <div class="comment-inner">
-                                    <div class="comment-thumb"><img src="{{asset('assets/frontend/assets/img/author-3.jpg')}}" alt="img"></div>
-                                    <div class="comment-wrap">
-                                        <div class="comments-meta">
-                                            <h4>Patsy Hamlin <span>01.01.2024 at 8:00</span></h4>
-                                        </div>
-                                        <div class="comment-area">
-                                            <p>Outstanding quality in this theme, brilliant Effects and perfect crafted Code. We absolutely love it and can highly recommend DynamicLayers!</p>
-                                            <a href="#" class="reply">Reply</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
+                            @empty
+                            @endforelse
                         </ul>
                         
                         <div class="comment-form-wrap">
                             <h3>Leave a Comment</h3>
+                             @if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                            <form action="{{ route('frontend.store_comment', ['slug' => $blog_detail->slug]) }}" method="post" class="comment-form form-horizontal">
-        @csrf
-        <input value="1" name="user_id" type="hidden" />
-        <div class="comment-form-group">
-            <div class="form-field message">
-                <textarea id="comment" name="content" cols="30" rows="5" class="form-control comment" placeholder="Your Comment*" required></textarea>
-            </div>
-            <div class="form-field submit-btn">
-                <button id="submit" class="default-btn text-anim" type="submit" data-text="Submit Comment">Submit Comment</button>
-            </div>
-        </div>
-    </form>
+                                @csrf
+                                <input value="1" name="user_id" type="hidden" />
+                                <div class="comment-form-group">
+                                    <div class="form-field message">
+                                        <textarea id="comment" name="content" cols="30" rows="5" class="form-control comment" placeholder="Your Comment*" required></textarea>
+                                    </div>
+                                    <div class="form-field submit-btn">
+                                        <button id="submit" class="default-btn text-anim" type="submit" data-text="Submit Comment">Submit Comment</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <!--/.post-comments-->
@@ -187,6 +211,5 @@
             </div>
         </div>
     </section>
-    <!--/.single-page-->
-    
+    <!--/.single-page-->    
 @endsection

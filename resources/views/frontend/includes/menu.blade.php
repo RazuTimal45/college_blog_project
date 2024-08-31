@@ -32,7 +32,7 @@
                     </div>
                     <div class="top-right">
                         <ul class="top-right-info">
-                            <li><a href="mailto:vixto@example.com">vixto@example.com</a></li>
+                            <li><a href="mailto:razublogg@info.com">razublogg@info.com</a></li>
                             <li><a href="tel:+123456789">+123 456 789</a></li>
                         </ul>
                         <ul class="header-social">
@@ -89,11 +89,13 @@
                         <div class="header-menu-wrap">
                             <ul class="nav-menu">
                                 <li>
-                                    <a href="index-2.html" data-text="Home">Home</a>
-                                    <ul>
-                                        <li><a href="index-2.html">Home Default</a></li>
-                                        <li><a href="index-3.html">Home Modern</a></li>
-                                    </ul>
+                                    <a href="{{ route('frontend.index') }}" data-text="Home">Home</a>
+                                </li>
+                                <li>
+                                     <a href="{{ route('frontend.popular_blogs') }}" data-text="Popular Blogs">Popular Blogs</a>
+                                </li>
+                                 <li>
+                                     <a href="{{ route('frontend.recommended') }}" data-text="Recommended Blogs">Recommended Blogs</a>
                                 </li>
                                 <li>
                                     <a href="archive.html" data-text="Pages">Pages</a>

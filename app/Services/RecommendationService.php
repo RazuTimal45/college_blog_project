@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\backend\Post;
@@ -74,7 +75,7 @@ class RecommendationService
         return $tfidf;
     }
 
-    public function calculateRecommendations($postId)
+    public function calculateRecommendations($postId = null)
     {
         $posts = Post::all();
         $documents = [];
@@ -94,21 +95,26 @@ class RecommendationService
             $tfidfVectors[$id] = $this->calculateTFIDF($tf, $idf);
         }
 
-        // Find the target vector
-        $targetVector = $tfidfVectors[$postId];
+        // If a specific post is provided, recommend similar posts
+        if ($postId) {
+            $targetVector = $tfidfVectors[$postId];
 
-        // Calculate cosine similarity with other documents
-        $similarities = [];
-        foreach ($tfidfVectors as $id => $vector) {
-            if ($id != $postId) {
-                $similarities[$id] = $this->cosineSimilarity($targetVector, $vector);
+            // Calculate cosine similarity with other documents
+            $similarities = [];
+            foreach ($tfidfVectors as $id => $vector) {
+                if ($id != $postId) {
+                    $similarities[$id] = $this->cosineSimilarity($targetVector, $vector);
+                }
             }
+
+            arsort($similarities);
+            $recommendedPostIds = array_keys(array_slice($similarities, 0, 5, true));
+
+            return Post::whereIn('id', $recommendedPostIds)->get();
         }
 
-        arsort($similarities);
-        $recommendedPostIds = array_keys(array_slice($similarities, 0, 5, true));
-
-        return Post::whereIn('id', $recommendedPostIds)->get();
+        // Otherwise, just return a collection of top posts
+        return Post::limit(5)->get();
     }
 
     protected function cosineSimilarity($vectorA, $vectorB)

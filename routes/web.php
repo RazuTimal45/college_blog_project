@@ -38,6 +38,12 @@ use Illuminate\Support\Facades\Auth;
     Route::get('/user-register',[FrontendController::class,'userRegister'])->name('frontend.register');
     Route::get('/user-login',[FrontendController::class,'userLogin'])->name('frontend.login');
     Route::get('/general-contact',[FrontendController::class,'contact'])->name('frontend.contact');
+    Route::get('/popular_blogs',[FrontendController::class,'popularBlogs'])->name('frontend.popular_blogs');
+    Route::get('/recommended_blogs',[FrontendController::class,'recommendedBlogs'])->name('frontend.recommended');
+    Route::post('/blog/{slug}/comment', [FrontendController::class, 'storeComment'])->name('frontend.store_comment');
+
+
+
 
     // Route::get('/teams',[FrontendController::class,'teams'])->name('frontend.teams');
     // Route::get('/contact',[FrontendController::class,'contact'])->name('frontend.contact');
