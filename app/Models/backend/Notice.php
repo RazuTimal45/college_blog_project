@@ -6,18 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Contact extends Model
+class Notice extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'contact';
+    protected $table = 'notice';
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'address',
-        'message',
-        'created_at',
-        'updated_at'
+        'title',
+        'status',
+        'message'
     ];
+
 }

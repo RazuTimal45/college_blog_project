@@ -16,15 +16,12 @@
                             <div class="ticker-slide-wrap">
                                 <div class="swiper ticker-slider">
                                     <div class="swiper-wrapper">
+                                    @forelse($data['trending'] as $trending)
                                         <div class="swiper-slide">
-                                            <a href="single.html">Former CIA hacker sentenced to 40 years in prison...</a>
+                                            <a href="single.html">{{ $trending->message }}</a>
                                         </div>
-                                        <div class="swiper-slide">
-                                            <a href="single.html">US approves $4bn sale of armed drones to India...</a>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <a href="single.html">Facebook at 20: Four ways it changed the world...</a>
-                                        </div>
+                                    @empty
+                                    @endforelse
                                     </div>
                                 </div>
                             </div>
@@ -73,6 +70,20 @@
                                     </svg>
                                 </a>
                             </li>
+                           <li style="position: relative;">
+                                <a href="#">
+                                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 2px solid #fff; border-radius: 50%;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="48" height="48" fill="#007bff">
+                                            <path d="M320 256c70.7 0 128-57.3 128-128S390.7 0 320 0 192 57.3 192 128s57.3 128 128 128zm0 32c-86.3 0-256 43.1-256 128v32c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32v-32c0-84.9-169.7-128-256-128z" />
+                                        </svg>
+                                    </div>
+                                </a>
+                                <ul class="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 10;">
+                                    <li><a href="#">Item 1</a></li>
+                                    <li><a href="#">Item 2</a></li>
+                                    <li><a href="#">Item 3</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -87,72 +98,131 @@
                     </div>
                     <div class="main-header-info">
                         <div class="header-menu-wrap">
-                            <ul class="nav-menu">
-                                <li>
-                                    <a href="{{ route('frontend.index') }}" data-text="Home">Home</a>
-                                </li>
-                                <li>
-                                     <a href="{{ route('frontend.popular_blogs') }}" data-text="Popular Blogs">Popular Blogs</a>
-                                </li>
-                                 <li>
-                                     <a href="{{ route('frontend.recommended') }}" data-text="Recommended Blogs">Recommended Blogs</a>
-                                </li>
-                                <li>
-                                    <a href="archive.html" data-text="Pages">Pages</a>
-                                    <ul>
-                                        <li><a href="archive.html">Archive</a>
-                                            <ul>
-                                                <li><a href="category.html">Category</a></li>
-                                                <li><a href="author.html">Author</a></li>
-                                                <li><a href="tag.html">Tags</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="subscribe.html">Subscribe</a></li>
-                                        <li><a href="search.html">Search</a></li>
-                                        <li><a href="404.html">404 Error</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="blog-standard.html" data-text="Post Layout">Post Layout</a>
-                                    <ul>
-                                        <li><a href="blog-standard.html">Standard</a></li>
-                                        <li><a href="blog-grid.html">Grid Layout</a></li>
-                                        <li><a href="blog-list.html">List Layout</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="single.html" data-text="Post Formats">Post Formats</a>
-                                    <ul>
-                                        <li><a href="single.html">Standard</a></li>
-                                        <li><a href="single-gallery.html">Gallary</a></li>
-                                        <li><a href="single-left-sidebar.html">Left Sidebar</a></li>
-                                        <li><a href="single-right-sidebar.html">Right Sidebar</a></li>
-                                        <li><a href="single-video.html">Video</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                        <ul class="nav-menu">
+                            <li>
+                                <a href="{{ request()->routeIs('frontend.index') ? 'javascript:;' : route('frontend.index') }}" data-text="Home">Home</a>
+                            </li>
+                            <li>
+                                <a href="{{ request()->routeIs('frontend.popular_blogs') ? 'javascript:;' : route('frontend.popular_blogs') }}" data-text="Popular Blogs">Popular Blogs</a>
+                            </li>
+                            <li>
+                                <a href="{{ request()->routeIs('frontend.recommended') ? 'javascript:;' : route('frontend.recommended') }}" data-text="Recommended Blogs">Recommended Blogs</a>
+                            </li>
+                            <li>
+                                <a href="{{ request()->routeIs('frontend.about') ? 'javascript:;' : route('frontend.about') }}" data-text="About">About</a>
+                            </li>
+                            {{-- <li>
+                                <a href="blog-standard.html" data-text="Post Layout">Post Layout</a>
+                                <ul>
+                                    <li><a href="blog-standard.html">Standard</a></li>
+                                    <li><a href="blog-grid.html">Grid Layout</a></li>
+                                    <li><a href="blog-list.html">List Layout</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="single.html" data-text="Post Formats">Post Formats</a>
+                                <ul>
+                                    <li><a href="single.html">Standard</a></li>
+                                    <li><a href="single-gallery.html">Gallery</a></li>
+                                    <li><a href="single-left-sidebar.html">Left Sidebar</a></li>
+                                    <li><a href="single-right-sidebar.html">Right Sidebar</a></li>
+                                    <li><a href="single-video.html">Video</a></li>
+                                </ul>
+                            </li> --}}
+                        </ul>
                         </div>
-                        <!--/.header-menu-wrap-->
-                        <div class="menu-right-item">
-                            <button class="menu-search">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14.811 14.811">
-                                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" transform="translate(-2.25 -2.25)">
-                                        <circle cx="5.5" cy="5.5" r="5.5" data-name="Ellipse 7" transform="translate(3 3)"></circle>
-                                        <path d="m16 16-3.142-3.142"></path>
-                                    </g>
-                                </svg>
-                            </button>
-                            <button class="mobile-menu-action">
+                        <div class="menu-right-item d-flex align-items-center">
+                    <form id="searchForm" style="width: 200px; display: flex;">
+                        @csrf
+                        <div class="input-group">
+                            <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="Search..." aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="btnSearch">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14.811 14.811">
+                                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" transform="translate(-2.25 -2.25)">
+                                            <circle cx="5.5" cy="5.5" r="5.5" data-name="Ellipse 7" transform="translate(3 3)"></circle>
+                                            <path d="m16 16-3.142-3.142"></path>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                            <button class="mobile-menu-action ms-2">
                                 <span></span>
                                 <span></span>
                                 <span></span>
                             </button>
-                            <a href="{{ route('frontend.contact') }}" class="default-btn text-anim" data-text="Contact">Contact</a>
+                            <a href="{{ request()->routeIs('frontend.contact') ? 'javascript:;' : route('frontend.contact') }}" class="default-btn ms-2" data-text="Contact">Contact</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /.bottom-header -->
     </header>
+    @section('css')
+        <style>
+            .dropdown {
+                display: none;
+            }
+            li:hover .dropdown {
+                display: block;
+            }
+            .dropdown li {
+                list-style: none;
+            }
+            .dropdown a {
+                display: block; 
+                padding: 10px; 
+                text-decoration: none; 
+                color: #333; 
+            }
+            .dropdown a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+        </style>
+    @endsection
+    @section('js')
+    <script>
+    $(document).ready(function() {
+    $('#btnSearch').on('click', function(event) {
+        event.preventDefault(); 
+
+        const keyword = $('#searchInput').val().trim();
+
+        if (keyword === '') {
+            alert('Please enter a search keyword');
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route('posts.search') }}',
+            method: 'GET',
+            data: { keyword: keyword, _token: $('input[name="_token"]').val() },
+            success: function(response) {
+                displayResults(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Search failed: ', xhr);
+                alert('An error occurred while searching: ' + xhr.status + ' ' + xhr.statusText);
+            }
+        });
+    });
+
+    function displayResults(posts) {
+        const resultsContainer = $('#resultsContainer');
+        resultsContainer.empty(); 
+
+        if (posts.length === 0) {
+            resultsContainer.append('<p>No results found.</p>');
+            return;
+        }
+
+        posts.forEach(post => {
+            resultsContainer.append(`<div><h2>${post.title}</h2><p>${post.content}</p></div>`);
+        });
+    }
+});
+    </script>
+    @endsection

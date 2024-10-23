@@ -37,6 +37,7 @@ class ContactController extends BackendBaseController
         }else{
             Alert::error('error','Opps something went wrong');
         }
+        return redirect()->route($this->base_route.'index');
     }
 
     public function trash(){

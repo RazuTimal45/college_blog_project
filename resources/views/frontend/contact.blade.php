@@ -8,6 +8,17 @@
 @section('title','Contact')
 @section('main-section')
     {{-- @include('frontend.includes.breadcrumbs',['headtitle'=>'Contact us','title'=>'Contact us']) --}}
+
+     <section class="page-header">
+        <div class="container">
+            <div class="page-content-wrap">
+                <div class="page-content">
+                    <h2>Contact</h2>
+                    {{-- <p>Embark on a journey through the vibrant world of sustainable fashion, where innovation meets ethics and style.</p> --}}
+                </div>
+            </div>
+        </div>
+    </section>
  <section class="contact-section padding">
         <div class="map-pattern"></div>
         <div class="container">
@@ -18,14 +29,29 @@
                         <p>For all business and collaboration enquiries <br> please contact with me.</p>
                     </div>
                     <ul class="contact-info">
-                        <li><span>Address:</span>3770 Hidden meadow <br> drive venturia, ND 58489</li>
+                        <li><span>Address:</span>Imadol, Lalitpur</li>
                         <li><span>Phone:</span><a href="tel:7045550127">(704) 555-0127</a></li>
                         <li><span>Mail Us:</span><a href="#">razublogg@info.com</a></li>
                     </ul>
-                </div>
+            </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form action="" method="post" id="ajax_contact" class="form-horizontal">
+                      @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                     @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @include('frontend.includes.__form')
+                        {{-- <form action="" method="post" id="ajax_contact" class="form-horizontal">
                             <div class="contact-form-group">
                                 <div class="form-field">
                                     <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name" required="">
@@ -47,7 +73,8 @@
                                 </div>
                             </div>
                             <div id="form-messages" class="alert" role="alert"></div>
-                        </form>
+                        </form> --}}
+
                     </div>
                 </div>
             </div>
@@ -56,3 +83,4 @@
     <!--/.contact-section-->
     <!-- Contact -->
 @endsection
+

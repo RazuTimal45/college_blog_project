@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>MediaMan|@yield('title')</title>
+    <title>RazuBlogg | @yield('title')</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -86,9 +86,9 @@
                                   document.getElementById('logout-form').submit();">
                                   {{ __('Logout') }}
                         </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                                 </div>
                             </div>
                             <div class="main-header-menu d-block d-lg-none">

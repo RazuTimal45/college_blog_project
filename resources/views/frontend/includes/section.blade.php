@@ -29,7 +29,7 @@
 <!-- Header Section -->
 
 @yield('main-section')
-
+<div id="resultsContainer" style="margin-top: 10px;"></div>
     <footer class="footer-section bg-light-red">
         <div class="container">
             <div class="row gy-lg-0 gy-4">
@@ -56,27 +56,32 @@
                         </div>
                     </div>
                 </div>
-                
+
+                @if(isset($data['footer']) && $data['footer']->isNotEmpty())
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-widget widget">
                         <div class="widget-post-items">
                             <h3 class="widget-title">Recent Blogs</h3>
+                            @forelse($data['footer'] as $footer)
                             <div class="widget-post-item img-hover-move">
                                 <div class="widget-post-thumb media">
-                                    <a href="single.html"><img src="{{asset('assets/frontend/assets/img/post-1.jpg')}}" alt="thumb"></a>
+                                    <a href="{{ route('frontend.blog_detail',$footer->slug) }}"><img src="{{asset('images/posts/'.$footer->image)}}" alt="thumb"></a>
                                 </div>
                                 <div class="widget-post-content">
-                                    <h3><a href="single.html" class="text-hover">title</a></h3>
+                                    <h3><a href="single.html" class="text-hover">{{ $footer->title }}</a></h3>
                                     <ul class="post-meta">  
-                                        <li><a href="category.html">travel</a></li>
+                                        <li><a href="category.html"></a></li>
                                         <li class="sep"></li>
-                                        <li><a href="category.html" class="date">02.08.2024</a></li>
+                                        <li><a href="category.html" class="date">{{ \Carbon\Carbon::parse($footer->date)->format("d F, Y") }}</a></li>
                                     </ul>
                                 </div>
                             </div>
+                            @empty
+                            @endforelse
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-widget widget">
                         <div class="contact-widget">

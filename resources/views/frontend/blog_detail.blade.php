@@ -129,7 +129,7 @@
 
                     <div class="single-post-item">
                         <div class="single-post-author">
-                            <div class="author-thumb"><a href="author.html"><img src="{{asset('assets/frontend/assets/img/author-widget.jpg')}}" alt="thumb"></a></div>
+                            <div class="author-thumb"><a href="author.html"><img src="{{asset('assets/frontend/assets/img/raju.jpeg')}}" alt="thumb"></a></div>
                             <div class="author-info">
                                 <h3><a href="author.html">{{ $data['blog_detail']->user->name }}</a><span>Author</span></h3>
                                 <p>Meet {{ $data['blog_detail']->user->name }}, the passionate mind behind this blog. With a heart woven with words and a penchant for storytelling, Emily is a dedicated writer who crafts narratives. </p>
@@ -147,69 +147,86 @@
                     </div>
                     <!--/.post-author-->
                     
-                    <div class="single-post-item">
-                       <h3>Reviews</h3>
-                        <ul class="comments-box">
-                        @forelse($data['comments'] as $comments)
-                            <li class="comment">
-                                <div class="comment-inner">
-                                    <div class="comment-thumb"><img src="{{asset('assets/frontend/assets/img/author-1.jpg')}}" alt="img"></div>
-                                    <div class="comment-wrap">
-                                        <div class="comments-meta">
-                                            <h4>{{ $comments->user->name }} <span>{{ $comments->created_at->format('d.f.Y') }} at 8:00</span></h4>
-                                        </div>
-                                        <div class="comment-area">
-                                            <p>{{ $comments->content }}</p>
-                                            <a href="#" class="reply">Reply</a>
-                                        </div>
+                  <div class="single-post-item">
+                <h3>Reviews</h3>
+                <ul class="comments-box">
+                    @forelse($data['comments'] as $comment)
+                        <li class="comment">
+                            <div class="comment-inner">
+                                <div class="comment-thumb">
+                                    <img src="{{ asset('assets/frontend/assets/img/author-1.jpg') }}" alt="img">
+                                </div>
+                                <div class="comment-wrap">
+                                    <div class="comments-meta">
+                                        <h4>{{ $comment->user->name }} <span>{{ $comment->created_at->format('d.m.Y') }} at 8:00</span></h4>
+                                    </div>
+                                    <div class="comment-area">
+                                        <p>{{ $comment->content }}</p>
+                                        <a href="#" class="reply">Reply</a>
                                     </div>
                                 </div>
-                                {{-- <ul class="children">
-                                    <li class="comment">
-                                        <div class="comment-inner">
-                                            <div class="comment-thumb"><img src="{{asset('assets/frontend/assets/img/author-2.jpg')}}" alt="img"></div>
-                                            <div class="comment-wrap">
-                                                <div class="comments-meta">
-                                                    <h4>Raju <span>01.01.2024 at 8:00</span></h4>
-                                                </div>
-                                                <div class="comment-area">
-                                                    <p>The only thing I LOVE more than this theme and it’s incredible options is the support team! They are freaking amazable!</p>
-                                                    <a href="#" class="reply">Reply</a>
-                                                </div>
+                            </div>
+                            {{-- Uncomment and adjust if you need nested comments
+                            <ul class="children">
+                                <li class="comment">
+                                    <div class="comment-inner">
+                                        <div class="comment-thumb">
+                                            <img src="{{ asset('assets/frontend/assets/img/author-2.jpg') }}" alt="img">
+                                        </div>
+                                        <div class="comment-wrap">
+                                            <div class="comments-meta">
+                                                <h4>Raju <span>01.01.2024 at 8:00</span></h4>
+                                            </div>
+                                            <div class="comment-area">
+                                                <p>The only thing I LOVE more than this theme and it’s incredible options is the support team! They are freaking amazable!</p>
+                                                <a href="#" class="reply">Reply</a>
                                             </div>
                                         </div>
-                                    </li>
-                                </ul> --}}
-                            </li>
-                            @empty
-                            @endforelse
-                        </ul>
-                        
-                        <div class="comment-form-wrap">
-                            <h3>Leave a Comment</h3>
-                             @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                           <form action="{{ route('frontend.store_comment', ['slug' => $blog_detail->slug]) }}" method="post" class="comment-form form-horizontal">
-                                @csrf
-                                <input value="1" name="user_id" type="hidden" />
-                                <div class="comment-form-group">
-                                    <div class="form-field message">
-                                        <textarea id="comment" name="content" cols="30" rows="5" class="form-control comment" placeholder="Your Comment*" required></textarea>
                                     </div>
-                                    <div class="form-field submit-btn">
-                                        <button id="submit" class="default-btn text-anim" type="submit" data-text="Submit Comment">Submit Comment</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                                </li>
+                            </ul>
+                            --}}
+                        </li>
+                    @empty
+                        <p>No comments yet.</p>
+                    @endforelse
+                </ul>
+
+        <div class="comment-form-wrap">
+            <h3>Leave a Comment</h3>
+            
+            {{-- Display Success Message --}}
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            {{-- Display Warning Message --}}
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
+            <form id="commentForm" action="{{ route('frontend.store_comment', ['slug' => $blog_detail->slug]) }}#commentSection" method="post" class="comment-form form-horizontal">
+                @csrf
+                <input value="1" name="user_id" type="hidden" />
+                <div class="comment-form-group">
+                    <div class="form-field message">
+                        <textarea id="comment" name="content" cols="30" rows="5" class="form-control comment" placeholder="Your Comment*" required></textarea>
                     </div>
-                    <!--/.post-comments-->
+                    <div class="form-field submit-btn">
+                        <button id="submit" class="default-btn text-anim" type="submit" data-text="Submit Comment">Submit Comment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+                        <!--/.post-comments-->
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!--/.single-page-->    
+        </section>   
 @endsection

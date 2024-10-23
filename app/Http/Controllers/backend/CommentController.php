@@ -42,7 +42,7 @@ class CommentController extends BackendBaseController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ExpertTeamRequest $request)
+    public function store(CommentRequest $request)
     {
         try{
             $request->request->add(['created_by' => auth()->user()->id]);
@@ -85,7 +85,7 @@ class CommentController extends BackendBaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(ExpertTeamRequest $request, string $id)
+    public function update(CommentRequest $request, string $id)
     {
         try {
             $data['records'] = $this->model->findOrFail($id);

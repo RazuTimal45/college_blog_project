@@ -85,10 +85,16 @@
         });
     });
     $(function(){
-        $("#tags").select2({
-          tags:true,
+       $("#tags").select2({
+                tags: true,
+                allowClear: true
+            });
+
+            $("#categories").select2({
+                placeholder: 'Select categories',
+                allowClear: true
+            });
         });
-    })
 </script>
 
 @endsection

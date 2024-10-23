@@ -25,25 +25,19 @@
                     <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Image</th>
-                        <th>Status</th>
-                        <th>No Of Readers</th>
+                        <th>Message</th>
+                        <th>Statud</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody id="sortable">
-                    @forelse($data['records'] as $data)
+                    @forelse($data['notices'] as $data)
                         <tr class="ui-state-default posts" id="{{$data->id}}">
                             <td>
                                 <i class="fas fa-arrow-up mr-1"></i>{{ Str::limit(ucfirst($data->title), 50) }}
                             </td>
-                            @if($data->image)
-                                <td><img src="{{asset('images/posts/'.$data->image)}}" alt="{{$data->name}}" width="100px" height="100px"></td>
-                            @else
-                                @include('backend.includes.noimage')
-                            @endif
+                            <td>{{ $data->message }}</td>
                             <td>@include('backend.includes.display_status',['status'=>$data->status])</td>
-                            <td>{{ $data->no_of_readers }}</td>
                             <td>
                                 <a href="{{route($base_route.'show',$data->id)}}" class="btn btn-success mr-1 float-lg-left"><i class="fas fa-eye"></i></a>
                                 <a href="{{route($base_route.'edit',$data->id)}}" class="btn btn-warning mr-1 float-lg-left"><i class="fas fa-edit"></i></a>

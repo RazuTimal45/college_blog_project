@@ -17,51 +17,9 @@
                         <th>Title</th>
                         <td>{{ucfirst($data['record']->title)}}</td>
                     </tr>
-                  
                     <tr>
-                        <th>Display Order</th>
-                        <td>{{$data['record']->rank}}</td>
-                    </tr>
-                    <tr>
-                    <th>Tags</th>
-                     <td class="">
-                        @if (!empty($data['tags']))
-                            @foreach ($data['tags'] as $tag => $count)
-                                <p class="fs-4">{{ $tag }} - {{ $count }}</p>
-                            @endforeach
-                        @else
-                            <p>No tags found.</p>
-                        @endif
-                    </td>
-                    </tr>
-                 <tr>
-    
-   <tr>
-    <th>Categories</th>
-    <td>
-        @if ($data['record']->categories->isNotEmpty())
-            @foreach ($data['record']->categories as $category)
-                {{ $category->name }}@if (!$loop->last), @endif
-            @endforeach
-        @else
-            No categories available
-        @endif
-    </td>
-</tr>
-
-</tr>
-
-                    <tr>
-                        <th>Image</th>
-                        @if($data['record']->image)
-                            <td><img src="{{asset('images/posts/'.$data['record']->image)}}" alt="{{$data['record']->name}}" width="150px" height="100px"></td>
-                        @else
-                            @include('backend.includes.noimage')
-                        @endif
-                    </tr>
-                    <tr>
-                    <th>Description</th>
-                    <td>{!! $data['record']->description !!}</td>
+                    <th>Message</th>
+                    <td>{!! $data['record']->message !!}</td>
                     </tr>
                       <tr>
                         <th>Status</th>

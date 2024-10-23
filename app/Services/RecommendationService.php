@@ -81,15 +81,12 @@ class RecommendationService
         $documents = [];
         $tfidfVectors = [];
 
-        // Preprocess and create term frequency (TF) vectors
         foreach ($posts as $post) {
             $documents[$post->id] = $this->preprocess($post->content);
         }
 
-        // Calculate IDF
         $idf = $this->calculateIDF($documents);
 
-        // Calculate TF-IDF for each document
         foreach ($documents as $id => $document) {
             $tf = $this->calculateTF($document);
             $tfidfVectors[$id] = $this->calculateTFIDF($tf, $idf);

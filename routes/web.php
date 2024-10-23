@@ -11,6 +11,7 @@ use App\Http\Controllers\backend\SettingsController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\TagController;
 use App\Http\Controllers\backend\ImageController;
+use App\Http\Controllers\backend\NoticeController;
 use App\Http\Controllers\frontend\FrontendController;
 use App\Http\Controllers\RecommendationController;
 use Illuminate\Support\Facades\Auth;
@@ -29,18 +30,18 @@ use Illuminate\Support\Facades\Auth;
     Route::get('/',[FrontendController::class,'index'])->name('frontend.default');
     Route::get('/home',[FrontendController::class,'home'])->name('frontend.index');
 
-    // Route::get('/about',[FrontendController::class,'aboutUs'])->name('frontend.about');
-    // Route::get('/offerings',[FrontendController::class,'services'])->name('frontend.services');
-    // Route::get('/offerings/{slug}',[FrontendController::class,'serviceDetail'])->name('frontend.service_detail');
-    // Route::get('/blogs',[FrontendController::class,'blogs'])->name('frontend.blogs');
-
+    Route::get('/about',[FrontendController::class, 'aboutUs'])->name('frontend.about');
     Route::get('/blogs/{slug}',[FrontendController::class,'blogDetail'])->name('frontend.blog_detail');
     Route::get('/user-register',[FrontendController::class,'userRegister'])->name('frontend.register');
     Route::get('/user-login',[FrontendController::class,'userLogin'])->name('frontend.login');
     Route::get('/general-contact',[FrontendController::class,'contact'])->name('frontend.contact');
-    Route::get('/popular_blogs',[FrontendController::class,'popularBlogs'])->name('frontend.popular_blogs');
+    Route::get('/popular_blogs', [FrontendController::class, 'popularBlogs'])->name('frontend.popular_blogs');
     Route::get('/recommended_blogs',[FrontendController::class,'recommendedBlogs'])->name('frontend.recommended');
     Route::post('/blog/{slug}/comment', [FrontendController::class, 'storeComment'])->name('frontend.store_comment');
+    Route::post('/contactForm', [FrontendController::class, 'contactStore'])->name('frontend.contact_store');
+
+    Route::get('/posts/search', [FrontendController::class, 'search'])->name('posts.search');
+
 
 
 
@@ -102,6 +103,12 @@ use Illuminate\Support\Facades\Auth;
     Route::delete('posts/permanentDelete/{id}', [PostController::class, 'permanentDelete'])->name('backend.posts.permanentDelete');
     Route::resource('posts', PostController::class)->names('backend.posts');
    
+    //Routes for Notices
+    Route::get( 'notices/trash', [NoticeController::class, 'trash'])->name(name: 'backend.notices.trash');
+    Route::get('notices/restore/{id}', [NoticeController::class, 'restore'])->name(name: 'backend.notices.restore');
+    Route::delete( 'notices/permanentDelete/{id}', [NoticeController::class, 'permanentDelete'])->name('backend.notices.permanentDelete');
+    Route::resource('notices', NoticeController::class)->names('backend.notices');
+
     // Routes for offerings/services
     Route::get('categories/checktitle', [CategoryController::class, 'checkTitle'])->name('backend.categories.ajaxtitle');
     Route::get('categories/trash', [CategoryController::class, 'trash'])->name('backend.categories.trash');

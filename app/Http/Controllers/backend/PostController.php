@@ -66,7 +66,7 @@ class PostController extends BackendBaseController
                 return response()->json(['message' => 'exist']);
             }
 
-            return response()->json(['message' => 'nodata']);
+            return response()->json(  ['message' => 'nodata']);
         }
     }
 
@@ -78,19 +78,47 @@ class PostController extends BackendBaseController
      {
          $words = str_word_count(strtolower(strip_tags($description)), 1);
          $wordCounts = array_count_values($words);
-         arsort($wordCounts);
+         arsort($wordCounts); // Sort by frequency
      
-         // Include the file that returns an array
          $stopWords = [
-            "and", "but", "or", "nor", "for", "yet", "so", "although", "because", "since", "unless", "while", "if", "before", "after", "when", "until",
-            "a", "an", "the",
-            "in", "on", "at", "by", "with", "about", "against", "between", "under", "over", "above", "below", "during", "through", "to", "from", "up", "down", "into", "out", "of",
-            "I", "me", "you", "he", "him", "she", "her", "it", "we", "us", "they", "them", "my", "your", "his", "her", "its", "our", "their", "mine", "yours", "hers", "ours", "theirs","is","am", "is", "are", "was", "were", "being", "been","have", "has", "had", "having","Can","Could","May","Might",
-            "Must","Shall","Should","Will","Would","this"
-        ]; 
+             "and", "but", "or", "nor", "for", "yet", "so", "although", "because", "since", "unless", "while", "if", "before", "after", "when", "until",
+             "a", "an", "the",
+             "in", "on", "at", "by", "with", "about", "against", "between", "under", "over", "above", "below", "during", "through", "to", "from", "up", "down", "into", "out", "of",
+             "I", "me", "you", "he", "him", "she", "her", "it", "we", "us", "they", "them", "my", "your", "his", "her", "its", "our", "their", "mine", "yours", "hers", "ours", "theirs", "is", "am", "are", "was", "were", "being", "been", "have", "has", "had", "having", "Can", "Could", "May", "Might",
+             "Must", "Shall", "Should", "Will", "Would", "this"
+         ]; 
      
-         $tags = array_diff(array_keys($wordCounts), $stopWords);
-         return array_slice($tags, 0, 5);
+         // Filter out stop words
+         $filteredWordCounts = array_diff_key($wordCounts, array_flip($stopWords));
+     
+         // Get the top 5 tags with their counts
+         $topTags = array_slice($filteredWordCounts, 0, 5, true);
+     
+         return $topTags; // Return an associative array of tags and their counts
+     }
+     
+     protected function matchCategories($description)
+     {
+         // Fetch all categories
+         $categories = Category::all();
+         $matchedCategories = [];
+     
+         // Check each category description for matches
+         foreach ($categories as $category) {
+             // Check if the category description exists in the post description
+             if (stripos($description, $category->description) !== false) {
+                 // Only include category if it has less than 4 posts
+                 $postCount = Post::whereHas('categories', function ($query) use ($category) {
+                     $query->where('category_id', $category->id);
+                 })->count();
+     
+                 if ($postCount < 4) {
+                     $matchedCategories[] = $category->id;
+                 }
+             }
+         }
+     
+         return $matchedCategories;
      }
      
      public function store(PostRequest $request)
@@ -100,49 +128,62 @@ class PostController extends BackendBaseController
              $request->request->add(['slug' => Str::slug($request->input('title'))]);
              $request->request->add(['created_by' => auth()->user()->id]);
              $request->request->add(['user_id' => auth()->user()->id]);
- 
+     
              if ($request->hasFile('image_file')) {
                  $image = $request->file('image_file');
                  $imageFilename = uniqid() . '.' . $image->getClientOriginalExtension();
                  $image->move('images/posts/', $imageFilename);
                  $request->request->add(['image' => $imageFilename]);
              }
- 
+     
              $request->request->add(['content' => $request->input("description")]);
              $post = $this->model->create($request->all());
- 
-             
+     
+             // Generate tags from the description
              $tags = $this->generateTagsFromDescription($request->input("description"));
- 
-             foreach ($tags as $tagName) {
+     
+             // Match categories based on description
+             $categories = $this->matchCategories($request->input("description"));
+             $post->categories()->attach($categories);
+     
+             // Attach tags
+             foreach ($tags as $tagName => $count) {
                  $tag = Tag::firstOrCreate(['name' => $tagName]);
                  $post->tags()->attach($tag->id);
              }
- 
+     
              DB::commit();
              Alert::success('Success', $this->panel . ' Added successfully');
          } catch (\Exception $exception) {
              DB::rollBack();
              Alert::error('Error', 'Oops....Error occurred: ' . $exception->getMessage());
          }
- 
+     
          return redirect()->route($this->base_route . 'index');
      }
+     
  
    
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        $data['record']=$this->model->find($id);
-        if(!$data['record']){
-            Alert::error('No Data','Data Not Found');
-            return view($this->__loadToView($this->base_view.'index'));
-        }else{
-            return view($this->__loadToView($this->base_view.'show'),compact('data'));
-        }
+{
+    $data['record'] = $this->model->find($id);
+    
+    if (!$data['record']) {
+        Alert::error('No Data', 'Data Not Found');
+        return view($this->__loadToView($this->base_view . 'index'));
+    } else {
+        // Generate tags with frequencies
+        \Log::info('Categories:', $data['record']->categories->toArray());
+        
+        $data['tags'] = $this->generateTagsFromDescription($data['record']->description);
+        return view($this->__loadToView($this->base_view . 'show'), compact('data'));
     }
+}
+
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -179,27 +220,51 @@ class PostController extends BackendBaseController
      */
     public function update(PostRequest $request, string $id)
     {
-        // dd($request->input('tags'));
-        $data['records']=$this->model->find($id);
+        $post = $this->model->find($id);
+        if (!$post) {
+            Alert::error('Error', 'Post not found.');
+            return redirect()->route($this->base_route . 'index');
+        }
+    
         $request->request->add(['updated_by' => auth()->user()->id]);
-        if($request->hasfile('image_file')) {
+    
+        
+        if ($request->hasFile('image_file')) {
             $filename = uniqid() . '.' . $request->file('image_file')->getClientOriginalExtension();
             $request->file('image_file')->move('images/posts/', $filename);
+    
+           
+            if ($post->image && file_exists(public_path('images/posts/' . $post->image))) {
+                unlink(public_path('images/posts/' . $post->image));
+            }
             $request->request->add(['image' => $filename]);
-            if ($data['records']->image && file_exists(public_path('images/posts/' . $data['records']->image))) {
-                unlink(public_path('images/posts/' . $data['records']->image));
-            }
         }
-            $d=$data['records']->update($request->all());
-            if($d){
-                $data['records']->categories()->sync($request->input("categories"));
-                $data['records']->tags()->sync($request->input("tag_id"));
-                Alert::success('success',$this->panel.' updated successfully');
-            }else{
-                Alert::error('error','Oops... error occurred');
+    
+        
+        $updated = $post->update($request->all());
+    
+        if ($updated) {
+            
+            $post->categories()->detach();
+    
+            
+            $categories = $this->matchCategories($request->input("description"));
+            if (!empty($categories)) {
+                $post->categories()->attach($categories);
             }
-            return redirect()->route($this->base_route.'index');
+    
+            
+            $post->tags()->sync($request->input("tag_id"));
+    
+            Alert::success('Success', $this->panel . ' updated successfully');
+        } else {
+            Alert::error('Error', 'Oops... error occurred');
+        }
+    
+        return redirect()->route($this->base_route . 'index');
     }
+    
+    
     public function destroy(string $id)
     {
         $data=$this->model->find($id);

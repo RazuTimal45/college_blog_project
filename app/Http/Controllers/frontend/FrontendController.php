@@ -4,10 +4,14 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\CommentRequest;
+use App\Http\Requests\backend\ContactRequest;
 use App\Http\Requests\backend\UserRequest;
 use App\Models\backend\Category;
 use App\Models\backend\Comment;
+use App\Models\backend\Contact;
+use App\Models\backend\Notice;
 use App\Models\backend\Post;
+use App\Models\backend\Tag;
 use App\Models\User;
 
 use App\Services\RecommendationService;
@@ -43,23 +47,57 @@ class FrontendController extends Controller
     }
     public function index(Request $request)
     {
-        $data['blogs'] = Post::all();  
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
+        $data['blogs'] = Post::orderBy('created_at', 'desc')->paginate(6); 
         $data['categories'] = Category::all();
-    
-    
-        return view('frontend.index', compact('data'));
+        return view('frontend.default', compact('data'));
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout(); 
+        return redirect()->route('frontend.default'); 
     }
     
     public function aboutUs(){
-             
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
+        $data['popular'] = Post::with('categories')->orderBy('no_of_readers', 'desc')->take(4)->get();
+        return view('frontend.about',compact('data'));
     }
     public function home(){
-        $data['blogs'] = Post::all();  
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['blogs'] = Post::orderBy('created_at', 'desc')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
         $data['categories'] = Category::all();
+        $data['recommended'] = $this->recommendationService->calculateRecommendations()->take(8);
+        $data['popular'] = Post::with('categories')->orderBy('no_of_readers',  'desc')->paginate(4);
+        // dd($data);
         return view('frontend.index', compact('data'));
     }
+    public function contactStore(ContactRequest $request)
+    {
+        $contact = Contact::where('email', $request->email)
+            ->orWhere('phone', $request->phone)
+            ->first();
+            
+        if ($contact) {
+            return redirect()->back()->with('info', 'This email or phone number is already associated with an existing contact.');
+        }
+    
+        $record = Contact::create($request->all());
+        if ($record) {
+            return redirect()->back()->with('success', 'Your message was sent successfully. Please wait for our response.');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+    
     public function blogDetail($slug)
     {
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['blogs'] = Post::orderBy('created_at', 'desc')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
         $blog = Post::where('slug', $slug)->with('categories')->firstOrFail();
         $blog->increment('no_of_readers');
     
@@ -67,7 +105,6 @@ class FrontendController extends Controller
         
         $categoryIds = $blog->categories->pluck('id');
     
-        // Fetch related blogs based on the shared categories, excluding the current post
         $data['relatedBlogs'] = Post::whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('category_id', $categoryIds);
         })
@@ -75,34 +112,69 @@ class FrontendController extends Controller
         ->limit(4)
         ->get();
     
-          // Fetch the last five comments related to the post
             $data['comments'] = Comment::where('post_id', $blog->id)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
-        // Return the blog detail view with the data array
         return view('frontend.blog_detail', compact('data'));
     }
     
-    public function storeComment(CommentRequest $request, $slug)
+        protected $badWords = [
+            'kukur',
+            'khate',
+            'madarchod',
+            'laude',
+            'masala',
+            'muji',
+            'bhalu',
+            'gu kha',
+            'chak',
+            'behen chod',
+            'dakka',
+            'chakka',
+            'hijada',
+            'sala',
+            'randikoban'
+        ];
+
+      public function storeComment(CommentRequest $request, $slug)
     {
-        // Fetch the blog post based on the slug
-        $blog = Post::where('slug', $slug)->firstOrFail();
-    
-        // Create and save the comment
+        
+        $blog = Post::where('slug', $slug)->firstOrFail();        
+        $content = $request->input('content');       
+        if ($this->containsBadWords($content)) { 
+            return redirect()->route('frontend.blog_detail', ['slug' => $blog->slug])
+                             ->with('error', 'Your comment contains inappropriate language and cannot be posted.');
+        }
+
         $comment = new Comment([
-            'user_id' => $request->input('user_id'), // From hidden input
-            'post_id' => $blog->id,                 // From the blog post found by slug
-            'content' => $request->input('content'), // From the textarea input
+            'user_id' => $request->input('user_id'), 
+            'post_id' => $blog->id,                 
+            'content' => $content,                  
         ]);
-    
-        // Save the comment to the database
+
         $comment->save();
-    
-        // Redirect back to the blog post with a success message
         return redirect()->route('frontend.blog_detail', ['slug' => $blog->slug])
                          ->with('success', 'Your comment has been added successfully.');
     }
+
+    /**
+     * Check if the given text contains any bad words.
+     *
+     * @param string $text
+     * @return bool
+     */
+    protected function containsBadWords($text)
+    {
+        foreach ($this->badWords as $badWord) {
+            if (stripos($text, $badWord) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     
 
     public function userLogin(){
@@ -118,20 +190,57 @@ class FrontendController extends Controller
         return view('frontend.register');
     }
     public function contact(){
-        return view('frontend.contact');
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
+        return view('frontend.contact',compact('data'));
     }
     public function popularBlogs()
     {
-        $data['blogs'] = Post::with('categories')->orderBy('no_of_readers', 'desc')->limit(12)->get();
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['blogs'] = Post::orderBy('created_at', 'desc')->get();
+        $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();
+        $data['popular'] = Post::with('categories')
+        ->orderBy('no_of_readers', 'desc')
+        ->orderBy(column: 'created_at')
+        ->paginate(3);    
+    
+        // dd($data['blogs']);
         return view('frontend.popular_blogs', compact('data'));
     }
-    
+
     public function recommendedBlogs()
     {
+        $data['trending'] = Notice::where('status','1')->get();
+        $data['footer'] = Post::orderBy(column: 'created_at', direction: 'desc')->take(2)->get();
         $data['recommended'] = $this->recommendationService->calculateRecommendations();
-
         return view('frontend.recommended', compact('data'));
     }
-    
+    public function dashboardCount(){
+        $data['post_counts'] = Post::count();
+        $data['user_counts'] = User::count();
+        $data['categories'] = User::count();
+        $data['tags'] = Tag::count();
+
+        return view('frontend.dashboard', compact('data'));
+    }
+  
+    public function search(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'keyword' => 'required|string|min:1',
+        ]);
+
+        // Get the keyword from the request
+        $keyword = $request->input('keyword');
+
+        // Search for posts that match the keyword
+        $posts = Post::where('title', 'LIKE', '%' . $keyword . '%')
+                     ->orWhere('content', 'LIKE', '%' . $keyword . '%')
+                     ->get();
+
+        // Return the results as JSON
+        return response()->json($posts);
+    }
     
 }

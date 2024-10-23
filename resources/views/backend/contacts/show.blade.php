@@ -29,7 +29,7 @@
                     </tr>
                     <tr>
                     <th>Address</th>
-                    <td>{{ $data['record']->Address}}</td>
+                    <td>{{ $data['record']->address}}</td>
                     </tr>
                     <tr>
                         <th>Message</th>

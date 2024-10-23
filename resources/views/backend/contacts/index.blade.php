@@ -29,10 +29,19 @@
                     <tbody id="sortable">
                     @forelse($data['records'] as $data)
                         <tr class="ui-state-default clients_partners" id="{{$data->id}}">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $data->name }}</td>
+                            <td>{{ $data->email }}</td>
+                            <td>{{ $data->message }}</td>
+                            <td class="d-flex">
+                                <a href="{{route($base_route.'show',$data->id)}}" class="btn btn-secondary mr-1"><i class="fas fa-eye"></i></a>
+                                <form action="{{route($base_route.'destroy',$data->id)}}" method="post" class="delete-form">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <div class="text-danger">No {{$panel}} Found</div>

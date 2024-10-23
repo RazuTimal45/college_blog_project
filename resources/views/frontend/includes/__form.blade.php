@@ -1,27 +1,27 @@
-{!! Form::open(['url'=> route('frontend.contact_store').'#contactform', 'class' => 'contact_form']) !!}
-<div class="row">
-    <div class="col-lg-6">
-        {!! Form::text('name', null, ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.5s', 'placeholder' => 'Your full name']) !!}
+{!! Form::open(['url' => route('frontend.contact_store'), 'method' => 'POST', 'class' => 'contact_form form-horizontal']) !!}
+<div class="contact-form-group">
+    <div class="form-field name">
+        {!! Form::text('name', old('name'), ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.5s', 'placeholder' => 'Enter Name']) !!}
         @include('backend.includes.field_validation',['input'=>'name'])
     </div>
-    <div class="col-lg-6">
-        {!! Form::email('email', null, ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Enter email address']) !!}
+    <div class="form-field">
+        {!! Form::email('email', old('email'), ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Enter email address']) !!}
         @include('backend.includes.field_validation',['input'=>'email'])
     </div>
-    <div class="col-lg-6">
-        {!! Form::number('phone', null, ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Enter your phone']) !!}
+    <div class="form-field">
+        {!! Form::number('phone', old('phone'), ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Enter your phone']) !!}
         @include('backend.includes.field_validation',['input'=>'phone'])
     </div>
-    <div class="col-lg-6">
-        {!! Form::select('services', $data['offerings']->pluck('title', 'id')->toArray(), $data['singleservice']->id ?? null, ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Select services']) !!}
-        @include('backend.includes.field_validation',['input'=>'services'])
+    <div class="form-field">
+        {!! Form::text('address', old('address'), ['class' => 'form-control input wow fadeInLeft', 'data-wow-delay' => '0.7s', 'placeholder' => 'Enter your Address']) !!}
+        @include('backend.includes.field_validation',['input'=>'address'])
     </div>
-    <div class="col-lg-12">
-        {!! Form::textarea('message', null, ['class' => 'form-control input textarea wow fadeInLeft', 'data-wow-delay' => '0.9s', 'placeholder' => 'Write your message']) !!}
+    <div class="form-field message">
+        {!! Form::textarea('message', old('message'), ['class' => 'form-control input textarea wow fadeInLeft', 'data-wow-delay' => '0.9s', 'placeholder' => 'Write your message']) !!}
         @include('backend.includes.field_validation',['input'=>'message'])
     </div>
-    <div class="col-lg-12">
-    {!! Form::submit('Send message', ['class' => 'bg_btn_color wow fadeInLeft', 'data-wow-delay' => '1.1s']) !!}
+    <div class="form-field submit-btn">
+        {!! Form::submit('Send message', ['class' => 'bg_btn_color wow fadeInLeft default-btn text-anim', 'data-wow-delay' => '1.1s','data-text'=>'Submit']) !!}
     </div>
 </div>
 {!! Form::close() !!}

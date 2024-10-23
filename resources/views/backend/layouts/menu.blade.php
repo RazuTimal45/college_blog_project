@@ -73,6 +73,23 @@
                 </ul>
             </li>
             @if (auth()->user()->id === 1 )
+            <li class="nav-category">Admin Notice</li>
+            <li>
+                <a href="#"
+                ><i class="icofont-hand"></i>
+                    <span class="link-title">Notices</span></a
+                >
+                <ul class="nav sub-menu">
+                    <li>
+                        <a href="{{route('backend.notices.index')}}">View All Notices</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.notices.create')}}">Create Notice</a>
+                    </li>
+                </ul>
+            </li>
+            @endif
+            @if (auth()->user()->id === 1 )
             <li class="nav-category">Site Setting</li>
             <li>
                 <a href="#"
