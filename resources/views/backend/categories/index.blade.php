@@ -34,6 +34,7 @@
                             <td>@include('backend.includes.display_status',['status'=>$data->status])</td>
                             <td class="d-flex">
                                 <a href="{{route($base_route.'show',$data->id)}}" class="btn btn-secondary mr-1"><i class="fas fa-eye"></i></a>
+                                <a href="{{route($base_route.'edit',$data->id)}}" class="btn btn-warning mr-1 float-lg-left"><i class="fas fa-edit"></i></a>
                                 <form action="{{route($base_route.'destroy',$data->id)}}" method="post" class="delete-form">
                                     @csrf
                                     @method('delete')
