@@ -12,7 +12,7 @@
                     <div class="flex mt-3">
                         <a href="{{ route('frontend.login') }}" class="default-btn text-anim" data-text="Login">Login</a>
                         <a href="{{ route('frontend.register') }}" class="default-btn text-anim" data-text="Register">Register</a>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>

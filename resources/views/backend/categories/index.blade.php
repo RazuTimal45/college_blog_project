@@ -69,15 +69,15 @@
             text-align: right;
         }
 
-        /* Adjust the margin for better spacing */
+        
         .dataTables_filter label {
-            margin-right: 10px; /* Adjust the value as needed */
+            margin-right: 10px; 
         }
 
-        /* If you want to align the search input and button horizontally */
+        
         .dataTables_filter input[type="search"] {
             display: inline-block;
-            width: auto; /* Adjust the width as needed */
+            width: auto; 
         }
     </style>
 @endsection

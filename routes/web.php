@@ -26,35 +26,35 @@ use Illuminate\Support\Facades\Auth;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// User Registration Routes
+Route::get('/user-register', [FrontendController::class, 'userRegisterForm'])->name('frontend.register'); 
+Route::post('/user-register', [FrontendController::class, 'userRegister'])->name('frontend.register.submit'); 
 
-    Route::get('/',[FrontendController::class,'index'])->name('frontend.default');
-    Route::get('/home',[FrontendController::class,'home'])->name('frontend.index');
+// User Login Route
+Route::get('/user-login', [FrontendController::class, 'userLogin'])->name('frontend.login');
+Route::post('/user-login', [FrontendController::class, 'userLoginSubmit'])->name('frontend.login.submit');
 
-    Route::get('/about',[FrontendController::class, 'aboutUs'])->name('frontend.about');
-    Route::get('/blogs/{slug}',[FrontendController::class,'blogDetail'])->name('frontend.blog_detail');
-    Route::get('/user-register',[FrontendController::class,'userRegister'])->name('frontend.register');
-    Route::get('/user-login',[FrontendController::class,'userLogin'])->name('frontend.login');
-    Route::get('/general-contact',[FrontendController::class,'contact'])->name('frontend.contact');
+// Default Route
+Route::get('/', [FrontendController::class, 'index'])->name('frontend.default');
+
+// Protected Routes Group
+Route::middleware(['frontend.auth'])->group(function () {
+    Route::get('/home', [FrontendController::class, 'home'])->name('frontend.index');
+    Route::get('/about-admin', [FrontendController::class, 'aboutAdmin'])->name('frontend.about_admin');
+    Route::get('/about', [FrontendController::class, 'aboutUs'])->name('frontend.about');
+    Route::get('/blogs/{slug}', [FrontendController::class, 'blogDetail'])->name('frontend.blog_detail');
+    Route::get('/general-contact', [FrontendController::class, 'contact'])->name('frontend.contact');
     Route::get('/popular_blogs', [FrontendController::class, 'popularBlogs'])->name('frontend.popular_blogs');
-    Route::get('/recommended_blogs',[FrontendController::class,'recommendedBlogs'])->name('frontend.recommended');
+    Route::get('/recommended_blogs', [FrontendController::class, 'recommendedBlogs'])->name('frontend.recommended');
     Route::post('/blog/{slug}/comment', [FrontendController::class, 'storeComment'])->name('frontend.store_comment');
     Route::post('/contactForm', [FrontendController::class, 'contactStore'])->name('frontend.contact_store');
-
     Route::get('/posts/search', [FrontendController::class, 'search'])->name('posts.search');
+});
 
 
 
 
-
-    // Route::get('/teams',[FrontendController::class,'teams'])->name('frontend.teams');
-    // Route::get('/contact',[FrontendController::class,'contact'])->name('frontend.contact');
-    // Route::post('/contact/submit',[FrontendController::class,'contactStore'])->name('frontend.contact_store');
-    // Route::post('/mail/submit',[FrontendController::class,'mailStore'])->name('frontend.mail_store');
-    // Route::get('/pages/{slug}',[FrontendController::class,'singlePage'])->name('frontend.single_page');
-    // Route::get('/news_press',[FrontendController::class,'news_prs'])->name('frontend.news_press');
-    // Route::get('/news_press/{slug}',[FrontendController::class,'single_news_prs'])->name('frontend.single_news_press');
-    // Route::get('/recommendations', [RecommendationController::class, 'getRecommendations']);
-    Route::post('/blog/{slug}/comment', [FrontendController::class, 'storeComment'])->name('frontend.store_comment');
+    
 
     // Route::middleware(['auth'])->group(function())
     // Custom login and register routes for admin

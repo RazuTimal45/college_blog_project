@@ -15,8 +15,12 @@ use App\Models\backend\Tag;
 use App\Models\User;
 
 use App\Services\RecommendationService;
+
+
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+// use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+
 
 // use App\Http\Requests\backend\ContactRequest;
 
@@ -44,6 +48,58 @@ class FrontendController extends Controller
     public function __construct(RecommendationService $recommendationService)
     {
         $this->recommendationService = $recommendationService;
+    }
+
+        public function userLogin(Request $request)
+        {
+            // Show the login form
+            $data['trending'] = Notice::where('status', '1')->get();
+            return view('frontend.login', compact('data'));
+        }
+
+    public function userLoginSubmit(Request $request)
+    {
+       // Handle login form submission
+       if ($request->isMethod('post')) {
+        $data['trending'] = Notice::where('status', '1')->get();
+
+        // Attempt to authenticate the user
+        if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
+            return redirect()->intended('/home');
+        }
+
+        // Authentication failed
+        return redirect()->route('frontend.login')
+            ->withErrors(['email' => 'Invalid credentials'])
+            ->withInput()
+            ->with('trending', $data['trending']);
+    }
+
+    // Return the login view for GET requests
+    return view('frontend.login', ['trending' => Notice::where('status', '1')->get()]);
+    }
+    
+
+
+    public function aboutAdmin(){
+        $data['trending'] = Notice::where('status','1')->get();
+        return view('frontend.about_admin',compact('data'));
+    }
+    public function userRegisterForm()
+    {
+        $data['trending'] = Notice::where('status','1')->get();
+        return view('frontend.register',compact('data')); 
+    }
+    public function userRegister(UserRequest $request){
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'bio' => $request->input('bio'),
+        ]);
+        
+        // Redirect after successful registration
+        return redirect()->route('frontend.login')->with('success', 'Registration successful! Please log in.');
     }
     public function index(Request $request)
     {
@@ -177,18 +233,7 @@ class FrontendController extends Controller
 
     
 
-    public function userLogin(){
-        return view('frontend.login');
-    }
-    public function userRegister(UserRequest $request){
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'bio' => $request->input('bio'),
-        ]);
-        return view('frontend.register');
-    }
+   
     public function contact(){
         $data['trending'] = Notice::where('status','1')->get();
         $data['footer'] = Post::orderBy('created_at', 'desc')->take(2)->get();

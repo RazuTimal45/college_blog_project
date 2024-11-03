@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form action="{{ route('frontend.register') }}" method="post" id="ajax_contact" class="form-horizontal">
+                        <form action="{{  route('frontend.register.submit')  }}" method="post" id="ajax_contact" class="form-horizontal">
                                 @csrf
                                 <div class="contact-form-group">
                                     <div class="form-field">

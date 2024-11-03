@@ -27,7 +27,6 @@
     
     <div id="searchbox-overlay"></div>
 
-
     @if($data['blogs']->isNotEmpty())
         <section class="featured-post">
             <div class="featured-post-wrap">

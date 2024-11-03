@@ -17,20 +17,23 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form action="" method="" id="ajax_contact" class="form-horizontal">
-                            <div class="contact-form-group d-block">
-                                <div class="form-field my-2">
-                                    <input type="email" id="email" name="email" class="form-control w-50" placeholder="Email">
-                                </div>
-                                 <div class="form-field my-2">
-                                    <input type="password" id="password" name="password" class="form-control w-50" placeholder="********">
-                                </div>
-                                <div class="form-field submit-btn">
-                                    <button id="submit" class="default-btn text-anim" type="submit" data-text="Login"><a href="/home">Login</a></button>
-                                </div>
+                       <form action="{{ route('frontend.login.submit') }}" method="POST" id="ajax_contact" class="form-horizontal">
+                        @csrf
+                        <div class="contact-form-group d-block">
+                            <div class="form-field my-2">
+                                <input type="email" id="email" name="email" class="form-control w-50" placeholder="Email" required>
                             </div>
-                            <div id="form-messages" class="alert" role="alert"></div>
-                        </form>
+                            <div class="form-field my-2">
+                                <input type="password" id="password" name="password" class="form-control w-50" placeholder="********" required>
+                            </div>
+                            <div class="form-field submit-btn">
+                                <button id="submit" class="default-btn text-anim" type="submit" data-text="Login">Login</button>
+                                <a href="{{ route('frontend.register') }}" class="default-btn text-anim" data-text="Don't Have An Account">Don't Have An Account</a>
+                            </div>
+                        </div>
+                        <div id="form-messages" class="alert" role="alert"></div>
+                    </form>
+
                     </div>
                 </div>
             </div>
