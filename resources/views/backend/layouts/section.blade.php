@@ -14,17 +14,17 @@
         rel="stylesheet"
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{asset('assets/backend/assets/bootstrap/css/bootstrap.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('assets/backend/assets/fonts/icofont/icofont.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('assets/backend/ckeditor5-build-classic-41.0.0/ckeditor5-build-classic/sample/css/sample.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/backend/assets/bootstrap/css/bootstrap.min.css?v=' . now()->timestamp)}}" />
+    <link rel="stylesheet" href="{{asset('assets/backend/assets/fonts/icofont/icofont.min.css?v=' . now()->timestamp)}}" />
+    <link rel="stylesheet" href="{{asset('assets/backend/ckeditor5-build-classic-41.0.0/ckeditor5-build-classic/sample/css/sample.css?v=' . now()->timestamp)}}">
     <link
         rel="stylesheet"
-        href="{{asset('assets/backend/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.css')}}"
+        href="{{asset('assets/backend/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.css?v=' . now()->timestamp)}}"
     />
     
-    <link rel="stylesheet" href="{{asset('assets/backend/assets/plugins/apex/apexcharts.css')}}" />
-        <link rel="stylesheet" href="{{asset('assets/backend/assets/css/select2.min.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/backend/assets/css/style.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/backend/assets/plugins/apex/apexcharts.css?v=' . now()->timestamp)}}" />
+        <link rel="stylesheet" href="{{asset('assets/backend/assets/css/select2.min.css?v=' . now()->timestamp)}}">
+        <link rel="stylesheet" href="{{asset('assets/backend/assets/css/style.css?v=' . now()->timestamp)}}" />
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.2/dist/css/select2.min.css" rel="stylesheet" />
 
 
@@ -245,17 +245,17 @@
         </div>
         </footer>
 </div>
-<script src="{{asset('assets/backend/assets/js/jquery.min.js')}}"></script>
-<script src="{{asset('assets/backend/assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('assets/backend/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
-<script src="{{asset('assets/backend/ckeditor5-build-classic-41.0.0/ckeditor5-build-classic/ckeditor.js')}}"></script>
-<script src="{{asset('assets/backend/assets/js/script.js')}}"></script>
+<script src="{{asset('assets/backend/assets/js/jquery.min.js?v=' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/assets/bootstrap/js/bootstrap.bundle.min.js?v=' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/ckeditor5-build-classic-41.0.0/ckeditor5-build-classic/ckeditor.js?v=' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/assets/js/script.js?v=' . now()->timestamp)}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-<script src="{{asset('assets/backend/assets/js/select2.min.js')}}"></script>
-<script src="{{asset('assets/backend/assets/js/jquery_validate.min.js')}}"></script>
+<script src="{{asset('assets/backend/assets/js/select2.min.js?v=' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/assets/js/jquery_validate.min.js?v=' . now()->timestamp)}}"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script src="{{asset('assets/backend/assets/plugins/apex/apexcharts.min.js')}}"></script>
-<script src="{{asset('assets/backend/assets/plugins/apex/custom-apexcharts.js')}}"></script>
+<script src="{{asset('assets/backend/assets/plugins/apex/apexcharts.min.js?v=' . now()->timestamp)}}"></script>
+<script src="{{asset('assets/backend/assets/plugins/apex/custom-apexcharts.js?v=' . now()->timestamp)}}"></script>
 @yield('js')
 </body>
 </html>

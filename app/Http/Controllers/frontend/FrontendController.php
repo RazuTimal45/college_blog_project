@@ -80,7 +80,6 @@ class FrontendController extends Controller
     }
     
 
-
     public function aboutAdmin(){
         $data['trending'] = Notice::where('status','1')->get();
         return view('frontend.about_admin',compact('data'));

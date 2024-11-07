@@ -30,7 +30,7 @@
                                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
                                     </div>
                                     <div class="form-field">
-                                        <input type="password" id="c-password" name="c-password" class="form-control" placeholder="Confirm Password" required="">
+                                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm Password" required="">
                                     </div>
                                     <div class="form-field">
                                         <textarea id="bio" name="bio" cols="30" rows="4" class="form-control" placeholder="Your Bio" required=""></textarea>
