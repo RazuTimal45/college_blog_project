@@ -83,4 +83,21 @@
     <!--/.contact-section-->
     <!-- Contact -->
 @endsection
+@section('js')
+       <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
+<script type="text/javascript">
+   $(function(){
+     $('#contactUSForm').submit(function(event) {
+        event.preventDefault();
+    
+        grecaptcha.ready(function() {
+            grecaptcha.execute("{{ env('RECAPTCHA_SITE_KEY') }}", {action: 'contact_form'}).then(function(token) {
+                $('#contactUSForm').prepend('<input type="hidden" name="g-recaptcha-response" value="' + token + '">');
+                $('#contactUSForm').unbind('submit').submit();
+            });;
+        });
+    });
+   })
+</script>
+@endsection
 

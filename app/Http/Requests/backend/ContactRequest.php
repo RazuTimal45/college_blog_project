@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\backend;
 
+use App\Rules\ReCaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ContactRequest extends FormRequest
@@ -49,6 +50,7 @@ class ContactRequest extends FormRequest
             'phone.regex'=>'The phone number must be valid',
             'address.required'=>'Please enter your address',
             'message.max' => 'The description must be less than 1000 characters.',
+            'g-recaptcha-response' => ['required', new ReCaptcha]
         ];
          
     }

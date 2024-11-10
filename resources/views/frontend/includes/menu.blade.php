@@ -78,12 +78,20 @@
                                         </svg>
                                     </div>
                                 </a>
-                                <ul class="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 10;">
-                                    <li><a href="#">Item 1</a></li>
-                                    <li><a href="#">Item 2</a></li>
-                                    <li><a href="#">Item 3</a></li>
-                                </ul>
-                            </li>
+                                <!-- Display the current logged-in user's name -->
+                                <span>{{ucfirst(Auth::user()->name ?? '') }}</span>
+                                
+                         <!-- Dropdown with Logout link -->
+                            <ul class="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 10;">
+                                <li>
+                                    <!-- Logout Form -->
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    <a href="#" id="logout-link">Logout</a>
+                                </li>
+                            </ul>
+                          </li>
                         </ul>
                     </div>
                 </div>
@@ -225,4 +233,10 @@
     }
 });
     </script>
+    <script>
+// Show dropdown on hover and trigger logout
+document.querySelector('.dropdown').addEventListener('mouseover', function() {
+    document.getElementById('logout-form').submit();
+});
+</script>
     @endsection

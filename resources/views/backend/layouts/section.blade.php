@@ -121,7 +121,7 @@
                                 </li> -->
                                 <li class="d-none d-lg-flex">
                                     <div class="main-header-btn  ml-md-1">
-                                        <a href="/" target="_blank" class="btn btns">Visit Site</a>
+                                        <a href="/home" target="_blank" class="btn btns">Visit Site</a>
                                     </div>
                                 </li>
                                 <li>

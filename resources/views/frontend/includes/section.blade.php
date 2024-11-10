@@ -158,6 +158,7 @@
 <script src="{{asset('assets/frontend/assets/js/mailchimp.js')}}"></script>
 <!-- Parallax - Js -->
 <script src="{{asset('assets/frontend/assets/js/main.js')}}"></script>
+
 @yield('js')
 </body>
 

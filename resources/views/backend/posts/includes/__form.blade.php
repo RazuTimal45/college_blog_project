@@ -19,11 +19,10 @@
     </div>
 
     <!-- Categories Field -->
-     @if(isset($data['record']))
-      <div class="col-12 col-lg-6 mb-30">
+     <div class="col-12 col-lg-6 mb-30">
         <div class="form-group">
             {!! Form::label('categories', 'Select Categories', ['class' => 'font-14 bold mb-2']) !!}
-            {!! Form::select('categories[]', $data['categories'], old('categories', $data['record']->categories->pluck('id')->toArray() ?? []), [
+            {!! Form::select('categories[]', $data['categories'], old('categories', isset($data['record']) ? $data['record']->categories->pluck('id')->toArray() : []), [
                 'class' => 'form-control select2',
                 'id' => 'categories',
                 'multiple' => 'multiple',
@@ -32,7 +31,6 @@
             @include('backend.includes.field_validation', ['input' => 'categories'])
         </div>
     </div>
-    @endif
     <!-- Tags Field -->
     @if(isset($data['record']))
     <div class="col-12 col-lg-6 mb-30">

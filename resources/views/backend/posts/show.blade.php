@@ -39,6 +39,7 @@
    <tr>
     <th>Categories</th>
     <td>
+       
         @if ($data['record']->categories->isNotEmpty())
             @foreach ($data['record']->categories as $category)
                 {{ $category->name }}@if (!$loop->last), @endif

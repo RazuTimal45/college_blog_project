@@ -125,10 +125,14 @@ class PostController extends BackendBaseController
      {
          DB::beginTransaction();
          try {
-             $request->request->add(['slug' => Str::slug($request->input('title'))]);
-             $request->request->add(['created_by' => auth()->user()->id]);
-             $request->request->add(['user_id' => auth()->user()->id]);
+             // Add slug, created_by, and user_id to the request
+             $request->request->add([
+                 'slug' => Str::slug($request->input('title')),
+                 'created_by' => auth()->user()->id,
+                 'user_id' => auth()->user()->id
+             ]);
      
+             // Handle image upload if provided
              if ($request->hasFile('image_file')) {
                  $image = $request->file('image_file');
                  $imageFilename = uniqid() . '.' . $image->getClientOriginalExtension();
@@ -136,20 +140,16 @@ class PostController extends BackendBaseController
                  $request->request->add(['image' => $imageFilename]);
              }
      
-             $request->request->add(['content' => $request->input("description")]);
+             // Add content from the description field
+             $request->request->add(['content' => $request->input('description')]);
+     
+             // Create the post
              $post = $this->model->create($request->all());
      
-             // Generate tags from the description
-             $tags = $this->generateTagsFromDescription($request->input("description"));
-     
-             // Match categories based on description
-             $categories = $this->matchCategories($request->input("description"));
-             $post->categories()->attach($categories);
-     
-             // Attach tags
-             foreach ($tags as $tagName => $count) {
-                 $tag = Tag::firstOrCreate(['name' => $tagName]);
-                 $post->tags()->attach($tag->id);
+             // Store categories from an input field
+             $categoryIds = $request->input('categories'); // Assume this is an array of category IDs
+             if ($categoryIds) {
+                 $post->categories()->attach($categoryIds);
              }
      
              DB::commit();
@@ -161,6 +161,7 @@ class PostController extends BackendBaseController
      
          return redirect()->route($this->base_route . 'index');
      }
+     
      
  
    
@@ -188,81 +189,91 @@ class PostController extends BackendBaseController
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        // Fetch the record to be edited
-        $record = $this->model->find($id);
-    
+{
+    // Fetch the record to be edited
+    $record = $this->model->find($id);
 
-        if (!$record) {
-            Alert::error('No Data', 'No Data Found');
-            return redirect()->route($this->base_route . 'index');
-        }
-    
-
-        $categories = Category::pluck('name', 'id');
-        $tags = Tag::pluck('name', 'id');
-    
-        
-        $assigned_tags = $record->tags->pluck('id')->toArray(); 
-    
-        $data = [
-            'record' => $record,
-            'categories' => $categories,
-            'tags' => $tags,
-            'assigned_tags' => $assigned_tags, 
-        ];
-
-        return view($this->__loadToView($this->base_view . 'edit'), compact('data'));
+    // If the record is not found, redirect with an error
+    if (!$record) {
+        Alert::error('No Data', 'No Data Found');
+        return redirect()->route($this->base_route . 'index');
     }
+
+    // Fetch categories and tags, and get assigned tags for the record
+    $categories = Category::pluck('name', 'id');
+    $tags = Tag::pluck('name', 'id');
+    $assigned_tags = $record->tags->pluck('id')->toArray();
+
+    // Prepare data for the view
+    $data = [
+        'record' => $record,
+        'categories' => $categories,
+        'tags' => $tags,
+        'assigned_tags' => $assigned_tags,
+    ];
+
+    return view($this->__loadToView($this->base_view . 'edit'), compact('data'));
+}
+
     
     /**
      * Update the specified resource in storage.
      */
     public function update(PostRequest $request, string $id)
-    {
-        $post = $this->model->find($id);
-        if (!$post) {
-            Alert::error('Error', 'Post not found.');
-            return redirect()->route($this->base_route . 'index');
-        }
-    
-        $request->request->add(['updated_by' => auth()->user()->id]);
-    
-        
+{
+    $post = $this->model->find($id);
+
+    // If post not found, redirect with an error
+    if (!$post) {
+        Alert::error('Error', 'Post not found.');
+        return redirect()->route($this->base_route . 'index');
+    }
+
+    // Add updated_by field
+    $request->request->add(['updated_by' => auth()->user()->id]);
+
+    DB::beginTransaction();
+    try {
+        // Handle image upload if provided
         if ($request->hasFile('image_file')) {
             $filename = uniqid() . '.' . $request->file('image_file')->getClientOriginalExtension();
             $request->file('image_file')->move('images/posts/', $filename);
-    
-           
+
+            // Delete the old image if it exists
             if ($post->image && file_exists(public_path('images/posts/' . $post->image))) {
                 unlink(public_path('images/posts/' . $post->image));
             }
             $request->request->add(['image' => $filename]);
         }
-    
-        
+
+        // Update post details
         $updated = $post->update($request->all());
-    
+
         if ($updated) {
-            
+            // Detach existing categories and attach matched categories
             $post->categories()->detach();
-    
-            
             $categories = $this->matchCategories($request->input("description"));
             if (!empty($categories)) {
                 $post->categories()->attach($categories);
             }
-    
-            
+
+            // Sync tags with the input tag IDs
             $post->tags()->sync($request->input("tag_id"));
-    
+
+            DB::commit();
             Alert::success('Success', $this->panel . ' updated successfully');
         } else {
-            Alert::error('Error', 'Oops... error occurred');
+            DB::rollBack();
+            Alert::error('Error', 'Update failed');
         }
-    
-        return redirect()->route($this->base_route . 'index');
+    } catch (\Exception $exception) {
+        DB::rollBack();
+        Alert::error('Error', 'An error occurred: ' . $exception->getMessage());
     }
+
+    return redirect()->route($this->base_route . 'index');
+}
+
     
     
     public function destroy(string $id)
